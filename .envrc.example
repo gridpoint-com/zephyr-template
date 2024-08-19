@@ -1,0 +1,10 @@
+# Setting up .evnrc
+#
+# Make a copy of this file i.e.
+# cp .envrc.example .envrc
+
+#
+# The board target. See `west boards` for a list of supported boards or the
+# docs: https://docs.zephyrproject.org/latest/boards/index.html
+#
+export BOARD=qemu_x86

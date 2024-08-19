@@ -1,0 +1,47 @@
+name: build
+
+on: push
+
+env:
+  BOARD: qemu_x86
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    env:
+      ASDF_DATA_DIR: ${{ github.workspace }}/.asdf
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache asdf
+        uses: actions/cache@v4
+        id: asdf
+        with:
+          path: .asdf
+          key: asdf-${{ runner.arch }}-${{ hashFiles('.tool-versions') }}
+      - name: Install asdf
+        if: steps.asdf.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: asdf-vm/asdf
+          path: .asdf
+          ref: v0.14.0
+      - name: Install dependencies
+        run: |
+          sudo apt install ninja-build
+          source .asdf/asdf.sh
+          asdf plugin add zephyr https://github.com/redwirelabs/asdf-zephyr.git
+          asdf plugin add zephyr-sdk https://github.com/redwirelabs/asdf-zephyr-sdk.git
+          asdf install
+      - name: Build firmware
+        run: |
+          source .asdf/asdf.sh
+          west build
+      - name: Prepare artifacts
+        run: |
+          mkdir artifacts
+          cp build/zephyr/$BOARD.* artifacts/
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: artifacts
