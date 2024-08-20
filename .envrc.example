@@ -1,4 +1,4 @@
-# Setting up .evnrc
+# Setting up .envrc
 #
 # Make a copy of this file i.e.
 # cp .envrc.example .envrc
