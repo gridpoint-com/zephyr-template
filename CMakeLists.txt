@@ -16,7 +16,8 @@ if(NOT DEFINED ENV{BOARD})
 endif()
 
 set(BOARD_ROOT ${CMAKE_CURRENT_LIST_DIR})
-set(CONFIG_KERNEL_BIN_NAME "\"${BOARD}\"" CACHE INTERNAL "The kernel binary name")
+get_filename_component(APP_NAME ${CMAKE_CURRENT_LIST_DIR} NAME)
+set(CONFIG_KERNEL_BIN_NAME "\"${APP_NAME}[${BOARD}]\"" CACHE INTERNAL "The kernel binary name")
 find_package(Zephyr $ENV{ZEPHYR_VERSION} REQUIRED HINTS $ENV{ZEPHYR_BASE})
 
 project(app)
